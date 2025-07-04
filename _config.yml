@@ -1,0 +1,11 @@
+# Site settings
+title: franciscomalveiro website
+description: Title is self-explanatory :)
+show_downloads: true # Set to false to hide download buttons
+
+# Theme settings
+remote_theme: pages-themes/cayman@v0.2.0 # Or another supported theme
+plugins:
+  - jekyll-remote-theme
+  - jekyll-relative-links # Converts relative links to markdown files
+  - jekyll-seo-tag # For better SEO
