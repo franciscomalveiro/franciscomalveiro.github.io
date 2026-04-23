@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/style.css">
+    <title>Title</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <script src="https://unpkg.com/papaparse@5"></script>
+</head>
+    
+<body>
+    <div class="map-wrapper">
+        <div id="map-data" class="map-container"></div>
+        <div id="map-queried" class="map-container"></div>
+    </div>
+
+    <div style="text-align: center;">
+        <label><input type="radio" name="choice" value="option1" checked> Identified Places</label>
+        <label><input type="radio" name="choice" value="option2"> Current OSM Data</label>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+
+    <script src="./js/map_data.js"></script>
+    <script src="./js/map_queried.js"></script>
+    <script src="./js/handler-radio.js"></script>
+</body>
+</html>
