@@ -7,7 +7,9 @@ function areaOfInterest() {
     ]);
 }
 
-
+/* 
+ * out meta to include metadata, e.g., timestamp
+ * */
 function overpassQuery() {
     
     return `
@@ -17,12 +19,12 @@ function overpassQuery() {
       node[shop=ice_cream](poly:${polyString});
       node[ice_cream=yes](poly:${polyString});
     );
-    out body;
+    out meta;
     `;
 }
 
 
-function markerText(coords, tags) {
+function markerText(coords, tags, timestamp) {
     /*
     let date = new Date().toLocaleDateString('en', { 
       weekday: 'long', 
@@ -34,16 +36,27 @@ function markerText(coords, tags) {
     
     let address = tags?.address;
     let schedule = tags?.opening_hours;
-    
-    console.log(coords.lat);
-    console.log(coords.lon);
 
     const latlonDisplay = `${coords.lat} ${coords.lon}`;
     
     const scheduleDisplay = schedule ? schedule.split(';').join('<br>') 
         : '<span style="color: red;">Missing schedule!</span>';
     
-    return `<div>${tags.name}<br>${latlonDisplay}<br><br>${scheduleDisplay}<br></div>`;
+    const date = new Date(timestamp);
+    const formattedDate = date.toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+        }).replace(/\//g, '.');
+    
+    const timestampDisplay = `Last update: ${formattedDate}`;
+    
+    return `<div>
+    ${tags.name}<br>
+    ${latlonDisplay}<br><br>
+    ${scheduleDisplay}<br><br>
+    ${timestampDisplay}
+    </div>`;
 }   
 
 
@@ -66,7 +79,7 @@ function main() {
       node[shop=ice_cream](poly:${polyString});
       node[ice_cream=yes](poly:${polyString});
     );
-    out body;
+    out meta;
     `;
     
     //const query = overpassQuery();
@@ -82,7 +95,10 @@ function main() {
     const markers = L.markerClusterGroup();
     map.addLayer(markers); 
     
-    fetch('https://overpass-api.de/api/interpreter', {
+    const overpassUrl = 'https://overpass-api.de/api/interpreter';
+    // const overpassUrl = 'https://lz4.overpass-api.de/api/interpreter';
+    
+    fetch(overpassUrl, {
         method: 'POST',
         body: query
     })
@@ -93,13 +109,12 @@ function main() {
             poiLon = poi.lon;
             
             tags = poi.tags;
+            timestamp = poi.timestamp;
 
             schedule = tags.opening_hours;
-            text = markerText({ lat: poiLat, lon: poiLon }, tags);
+            text = markerText({ lat: poiLat, lon: poiLon }, tags, timestamp);
             
             popup = L.popup().setContent(`${text}`);
-            
-            console.log(tags);
             
             if (poiLat && poiLon) {
                 // const marker = L.marker([poiLat, poiLon]).bindPopup(tags.name || 'POI');
