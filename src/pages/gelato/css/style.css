@@ -75,6 +75,10 @@ must be set to relative positioning.*/
     text-decoration: underline;
 }
 
+.missing-schedule {
+  color: red;
+}
+
 
 .marker-image-container {
   width: 300px;

@@ -1,3 +1,46 @@
+
+
+
+function overpassQuery() {
+    
+    return `
+    [out:json];
+    (
+      node[amenity=ice_cream](poly:${polyString});
+      node[shop=ice_cream](poly:${polyString});
+      node[ice_cream=yes](poly:${polyString});
+    );
+    out body;
+    `;
+}
+
+
+function markerText(coords, tags) {
+    /*
+    let date = new Date().toLocaleDateString('en', { 
+      weekday: 'long', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: false 
+    });   
+    */
+    
+    let address = tags?.address;
+    let schedule = tags?.opening_hours;
+    
+    console.log(coords.lat);
+    console.log(coords.lon);
+
+    const latlonDisplay = `${coords.lat} ${coords.lon}`
+    
+    const scheduleDisplay = schedule ? schedule.split(';').join('<br>') 
+        : '<span style="color: red;">Missing schedule!</span>';
+    
+    return `<div>${tags.name}<br>${latlonDisplay}<br><br>${scheduleDisplay}<br></div>`;
+}   
+
+
+
 function main() {
 
     const lat = 45.0705;
@@ -14,8 +57,6 @@ function main() {
     const polyCoords = polygon.getLatLngs()[0].map(pt => `${pt.lat} ${pt.lng}`).join(' ');
     const polyString = `"${polyCoords}"`;
     
-    
-    
     const query = `
     [out:json];
     (
@@ -25,6 +66,8 @@ function main() {
     );
     out body;
     `;
+    
+    //const query = overpassQuery();
     const zoomLevel = 13;
 
     const map = L.map('map-queried').setView([lat, lng], zoomLevel);
@@ -44,8 +87,21 @@ function main() {
     .then(response => response.json())
     .then(data => {
         data.elements.forEach(poi => {
-            if (poi.lat && poi.lon) {
-                const marker = L.marker([poi.lat, poi.lon]).bindPopup(poi.tags.name || 'POI');
+            poiLat = poi.lat;
+            poiLon = poi.lon;
+            
+            tags = poi.tags;
+
+            schedule = tags.opening_hours;
+            text = markerText({ lat: poiLat, lon: poiLon }, tags);
+            
+            popup = L.popup().setContent(`${text}`);
+            
+            console.log(tags);
+            
+            if (poiLat && poiLon) {
+                // const marker = L.marker([poiLat, poiLon]).bindPopup(tags.name || 'POI');
+                const marker = L.marker([poiLat, poiLon]).bindPopup(popup);
                 markers.addLayer(marker);
             }
         });
