@@ -1,4 +1,11 @@
-
+function areaOfInterest() {
+    return L.polygon([
+        [45.07, 7.70],
+        [45.07, 7.65],
+        [45.10, 7.65],
+        [45.10, 7.70]
+    ]);
+}
 
 
 function overpassQuery() {
@@ -31,7 +38,7 @@ function markerText(coords, tags) {
     console.log(coords.lat);
     console.log(coords.lon);
 
-    const latlonDisplay = `${coords.lat} ${coords.lon}`
+    const latlonDisplay = `${coords.lat} ${coords.lon}`;
     
     const scheduleDisplay = schedule ? schedule.split(';').join('<br>') 
         : '<span style="color: red;">Missing schedule!</span>';
@@ -47,12 +54,7 @@ function main() {
     const lng = 7.6868;
     const radius = 1000;
     
-    const polygon = L.polygon([
-        [45.07, 7.68],
-        [45.07, 7.68],
-        [45.10, 7.68],
-        [45.10, 7.79]
-    ]);
+    const polygon = areaOfInterest();
     
     const polyCoords = polygon.getLatLngs()[0].map(pt => `${pt.lat} ${pt.lng}`).join(' ');
     const polyString = `"${polyCoords}"`;
