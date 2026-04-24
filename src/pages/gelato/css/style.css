@@ -20,6 +20,16 @@ html, body {
 }
 
 
+#map {
+    position: absolute;
+    top: 180px;
+    bottom: 0;
+    right: 0;
+    width: 100%; /* Adjust as needed */
+    height: 400px;
+    z-index: 1;
+}
+
 .custom-popup .leaflet-popup-content-wrapper {
   background: #f0f0f0; /* Match this with image container */
   color: #333;
@@ -28,6 +38,8 @@ html, body {
 
 
 /* Markers */
+
+/* Popup  content */
 
 .marker-date {
     font-style: italic;
@@ -61,6 +73,7 @@ html, body {
   color: red;
 }
 
+/* Popup image */
 
 .marker-image-container {
   width: 300px;
@@ -80,6 +93,17 @@ html, body {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+/* Marker icon */
+
+.custom-marker-icon div {
+    width: 25px;
+    height: 41px;
+    clip-path: polygon(50% 0%, 100% 50%, 100% 98%, 50% 100%, 0% 98%, 0% 50%);
+    transform: rotate(45deg);
+    border: 2px solid white;
+    margin: 0 auto;
 }
 
 /* Map container */

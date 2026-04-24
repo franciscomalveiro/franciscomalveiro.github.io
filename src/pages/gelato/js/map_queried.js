@@ -64,7 +64,7 @@ function createColouredMarker(lat, lon, timestamp, colourScale) {
   const colour = colourScale(new Date(timestamp).getTime());
 
   const icon = L.divIcon({
-    className: 'custom-marker',
+    className: '',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
