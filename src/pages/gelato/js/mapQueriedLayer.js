@@ -1,11 +1,4 @@
-function areaOfInterest() {
-    return L.polygon([
-        [45.07, 7.70],
-        [45.07, 7.65],
-        [45.10, 7.65],
-        [45.10, 7.70]
-    ]);
-}
+import { areaOfInterest } from './aoi.js';
 
 
 function overpassQuery(polyString) {
@@ -20,6 +13,17 @@ function overpassQuery(polyString) {
     out meta;
     `;
 }
+
+function getOverpassPolyString(polygon) {
+    if (!(polygon instanceof L.Polygon)) {
+        throw new Error(`Invalid polygon type: expected L.Polygon, got ${polygon.type}`);
+    }
+
+    const latLngs = polygon.getLatLngs()[0][0];    
+    const polyCoords = latLngs.map(latlng => `${latlng.lat} ${latlng.lng}`).join(' ');
+    
+    return `"${polyCoords}"`;
+}   
 
 
 function fetchOverpassData(polyString) {
@@ -137,18 +141,18 @@ export async function createQueriedLayer() {
     const lat = 45.0705;
     const lng = 7.6868;
     
-    const polygon = areaOfInterest();
+    const useMockPolygon = false;
     
-    const polyCoords = polygon.getLatLngs()[0].map(pt => `${pt.lat} ${pt.lng}`).join(' ');
-    const polyString = `"${polyCoords}"`;
-    
-
-    const layer = L.layerGroup();
+    const polygon = await areaOfInterest(useMockPolygon);
+    const polyString = getOverpassPolyString(polygon);    
 
     const response = await fetchOverpassData(polyString);
     const data = await response.json();
     
+    const layer = L.layerGroup();
     const markers = processOverpassData(data);    
+    
+    polygon.addTo(layer);
     markers.addTo(layer); 
 
     return layer;
