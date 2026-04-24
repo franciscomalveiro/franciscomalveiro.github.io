@@ -11,14 +11,6 @@ html, body {
 }
 
 
-/* For absolute positioning to work, the parent element
-must be set to relative positioning.*/
-* { 
-    box-sizing: border-box;
-    position: relative;
-    margin: 0;
-    padding: 0;
-}
 
 
 
@@ -27,16 +19,6 @@ must be set to relative positioning.*/
     width: 50%;
 }
 
-
-#map {
-    position: absolute;
-    top: 180px;
-    bottom: 0;
-    right: 0;
-    width: 100%; /* Adjust as needed */
-    height: 400px;
-    z-index: 1;
-}
 
 .custom-popup .leaflet-popup-content-wrapper {
   background: #f0f0f0; /* Match this with image container */
@@ -102,15 +84,16 @@ must be set to relative positioning.*/
 
 /* Map container */
 
-.map-container {
-    width: 100%;
-    height: 100%;
-}   
 
 .map-wrapper {
-    width: 800px;
-    height: 600px; /* Explicit height is crucial */
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    overflow: hidden;
-}   
+  width: 800px;
+  height: 600px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
