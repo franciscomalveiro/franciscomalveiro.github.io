@@ -1,20 +1,27 @@
 function main() {
+  const maps = document.querySelectorAll('.map-container');
+  const selectedMapId = document.querySelector('input[name="choice"]:checked').value === 'option1' ? 'map-queried' 
+    : 'map-data';
 
-document.querySelectorAll('input[name="choice"]').forEach(radio => {
+  // Hide all, then show selected
+  maps.forEach(el => el.style.display = 'none');
+  document.getElementById(selectedMapId).style.display = 'block';
+
+  // Initialise map resize
+  const map = selectedMapId === 'map-data' ? window.map : window.mapQueried;
+  if (map) map.invalidateSize();
+
+  // Add event listeners
+  document.querySelectorAll('input[name="choice"]').forEach(radio => {
     radio.addEventListener('change', () => {
-        document.querySelectorAll('.map-container').forEach(el => {
-            el.style.display = 'none';
-        });
-        const selectedMapId = radio.value === 'option1' ? 'map-data' : 'map-queried';
-        document.getElementById(selectedMapId).style.display = 'block';
+      maps.forEach(el => el.style.display = 'none');
+      const selectedMapId = radio.value === 'option1' ? 'map-queried' : 'map-data';
+      document.getElementById(selectedMapId).style.display = 'block';
 
-        // Force layout update and refresh map
-        const map = selectedMapId === 'map-data' ? window.map : window.mapQueried;
-        if (map) {
-            setTimeout(() => map.invalidateSize(), 100);
-        }
+      const map = selectedMapId === 'map-data' ? window.map : window.mapQueried;
+      if (map) setTimeout(() => map.invalidateSize(), 100);
     });
-});   
+  });
 }
 
-window.addEventListener('DOMContentLoaded', main);   
+window.addEventListener('DOMContentLoaded', main);
