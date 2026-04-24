@@ -57,6 +57,67 @@ function markerText(coords, tags, timestamp) {
     ${scheduleDisplay}<br><br>
     ${timestampDisplay}
     </div>`;
+}
+
+
+function createColouredMarker(lat, lon, timestamp, colourScale) {
+  const colour = colourScale(new Date(timestamp).getTime());
+
+  const icon = L.divIcon({
+    className: 'custom-marker',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    html: `<div style="
+      width: 25px; 
+      height: 41px; 
+      background: ${colour}; 
+      clip-path: polygon(50% 0%, 100% 50%, 100% 98%, 50% 100%, 0% 98%, 0% 50%); 
+      transform: rotate(45deg);
+      border: 2px solid white;
+      margin: 0 auto;
+    "></div>`
+  });
+
+  return L.marker([lat, lon], { icon });
+}
+
+
+function handlePoiData(data, markers) {
+    
+    const timestamps = data.elements
+        .map(poi => poi.timestamp)
+        .filter(Boolean)
+        .map(ts => new Date(ts));
+    
+    const minTimestamp = new Date(Math.min(...timestamps.map(t => t.getTime())));
+    const maxTimestamp = new Date(Math.max(...timestamps.map(t => t.getTime())));
+    
+    const colourScale = d3.scaleSequential()
+        .domain([minTimestamp.getTime(), maxTimestamp.getTime()])
+        .interpolator(d3.interpolateRgb('red', 'green'));
+        
+
+    data.elements.forEach(poi => {
+        const { lat: poiLat, lon: poiLon, tags, timestamp } = poi;
+        
+        const schedule = tags.opening_hours;
+        const text = markerText({ lat: poiLat, lon: poiLon }, tags, timestamp);
+        const popup = L.popup().setContent(text);
+
+        if (poiLat && poiLon) {
+            // const marker = L.marker([poiLat, poiLon]).bindPopup(popup);
+            // const marker = L.circleMarker([poiLat, poiLon], { fillColor: colour });
+            
+            const marker = createColouredMarker(poiLat, poiLon, timestamp, colourScale);
+            marker.bindPopup(popup);
+            
+            markers.addLayer(marker);
+        }
+    });
+
+    
+    return timestamps;
 }   
 
 
@@ -89,7 +150,7 @@ function main() {
 
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     
     const markers = L.markerClusterGroup();
@@ -103,27 +164,9 @@ function main() {
         body: query
     })
     .then(response => response.json())
-    .then(data => {
-        data.elements.forEach(poi => {
-            poiLat = poi.lat;
-            poiLon = poi.lon;
-            
-            tags = poi.tags;
-            timestamp = poi.timestamp;
-
-            schedule = tags.opening_hours;
-            text = markerText({ lat: poiLat, lon: poiLon }, tags, timestamp);
-            
-            popup = L.popup().setContent(`${text}`);
-            
-            if (poiLat && poiLon) {
-                // const marker = L.marker([poiLat, poiLon]).bindPopup(tags.name || 'POI');
-                const marker = L.marker([poiLat, poiLon]).bindPopup(popup);
-                markers.addLayer(marker);
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching POIs:', error));
+    .then(data => handlePoiData(data, markers))
+    .catch(error => console.error('Error fetching POIs:', error))
+    .then();
     
     polygon.addTo(map);
     
