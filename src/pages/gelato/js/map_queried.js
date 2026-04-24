@@ -63,21 +63,13 @@ function markerText(coords, tags, timestamp) {
 function createColouredMarker(lat, lon, timestamp, colourScale) {
   const colour = colourScale(new Date(timestamp).getTime());
 
-  const icon = L.divIcon({
-    className: '',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    html: `<div style="
-      width: 25px; 
-      height: 41px; 
-      background: ${colour}; 
-      clip-path: polygon(50% 0%, 100% 50%, 100% 98%, 50% 100%, 0% 98%, 0% 50%); 
-      transform: rotate(45deg);
-      border: 2px solid white;
-      margin: 0 auto;
-    "></div>`
-  });
+    const icon = L.divIcon({
+        className: 'custom-marker-icon', // Use a custom class
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        html: `<div style="background: ${colour};"></div>`
+    });
 
   return L.marker([lat, lon], { icon });
 }
@@ -165,8 +157,7 @@ function main() {
     })
     .then(response => response.json())
     .then(data => handlePoiData(data, markers))
-    .catch(error => console.error('Error fetching POIs:', error))
-    .then();
+    .catch(error => console.error('Error fetching POIs:', error));
     
     polygon.addTo(map);
     

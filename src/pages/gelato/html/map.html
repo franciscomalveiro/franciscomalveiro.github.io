@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../css/map.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Title</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <script src="https://unpkg.com/papaparse@5"></script>
+</head>
+    
+<body>
+    <div class="map-wrapper">
+        <div id="map" class="map-container2"></div>
+    </div>
+    <div style="text-align: center;">
+        <label><input type="radio" name="choice" value="current" checked> Current OSM Data </label>
+        <label><input type="radio" name="choice" value="surveyed"> Surveyed Locations </label>
+    </div>
+    
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>   
+
+    <script type="module" src="../js/map.js"></script>
+    
+</body>
+
+</html>
