@@ -1,7 +1,3 @@
-import { areaOfInterest } from './aoi.js';
-import { loadOverpassData } from './overpassData.js';
-
-
 /*function overpassQuery(polyString) {
     
     return `
@@ -39,12 +35,12 @@ function fetchOverpassData(polyString) {
 }*/
 
 
-function processTimesteps(data) {
+/*function processTimesteps(data) {
     return data.elements
         .map(poi => poi.timestamp)
         .filter(Boolean)
         .map(ts => new Date(ts));
-}
+}*/
 
 
 function getColourScale(vmin, vmax) {
@@ -54,7 +50,7 @@ function getColourScale(vmin, vmax) {
 }
 
 
-function getMarkerText(coords, address, schedule, timestamp) {
+function getMarkerText(name, coords, address, schedule, timestamp) {
     /*
     let date = new Date().toLocaleDateString('en', { 
       weekday: 'long', 
@@ -64,7 +60,10 @@ function getMarkerText(coords, address, schedule, timestamp) {
     });   
     */
     
-    const latlonDisplay = `${coords.lat} ${coords.lng}`;
+    // let address = tags?.address;
+    // let schedule = tags?.opening_hours;
+
+    const latlngDisplay = `${coords.lat} ${coords.lng}`;
     
     const scheduleDisplay = schedule ? schedule.split(';').join('<br>') 
         : '<span style="color: red;">Missing schedule!</span>';
@@ -79,15 +78,15 @@ function getMarkerText(coords, address, schedule, timestamp) {
     const timestampDisplay = `Last update: ${formattedDate}`;
     
     return `<div>
-    ${tags.name}<br>
-    ${latlonDisplay}<br><br>
+    ${name}<br>
+    ${latlngDisplay}<br><br>
     ${scheduleDisplay}<br><br>
     ${timestampDisplay}
     </div>`;
 }
 
 
-function createColouredMarker(lat, lon, timestamp, colourScale) {
+function createColouredMarker(lat, lng, timestamp, colourScale) {
   const colour = colourScale(new Date(timestamp).getTime());
 
     const icon = L.divIcon({
@@ -98,17 +97,17 @@ function createColouredMarker(lat, lon, timestamp, colourScale) {
         html: `<div style="background: ${colour};"></div>`
     });
 
-  return L.marker([lat, lon], { icon });
+  return L.marker([lat, lng], { icon });
 }
 
 
 function processPoi(poi, markers, colourScale) {
-    //const { lat, lon, tags, timestamp } = poi;
+    // const { lat, lon, tags, timestamp } = poi;
     // const schedule = tags.opening_hours;
     
     const { coords: { lat, lng }, amenity, timestamp, name, address, schedule } = poi;   
     
-    const text = getMarkerText({ lat, lng }, address, schedule, timestamp);
+    const text = getMarkerText(name, { lat, lng }, address, schedule, timestamp);
     
     const popup = L.popup().setContent(text);
 
@@ -123,7 +122,8 @@ function processPoi(poi, markers, colourScale) {
 
 function processOverpassData(data) {
     const markers = L.markerClusterGroup();
-    const timestamps = data.map(item => item.timestamp);   
+    // const timestamps = processTimesteps(data);
+    const timestamps = data.map(datum => datum.timestamp);
     
     const minTimestamp = new Date(Math.min(...timestamps.map(t => t.getTime())));
     const maxTimestamp = new Date(Math.max(...timestamps.map(t => t.getTime())));
@@ -137,27 +137,22 @@ function processOverpassData(data) {
 
 
 
-export async function createQueriedLayer(data) {
+export async function createQueriedLayer(aoi, data) {
     const lat = 45.0705;
     const lng = 7.6868;
-    /*
-    const useMockPolygon = false;
     
-    const polygon = await areaOfInterest(useMockPolygon);
-    const polyString = getOverpassPolyString(polygon);    
+    // const useMockPolygon = false;
+    
+    // const polygon = await areaOfInterest(useMockPolygon);
+    // const polyString = getOverpassPolyString(polygon);    
 
-    const response = await fetchOverpassData(polyString);
-    
-    
-    
-    const data = await response.json();*/
-    
-    // const data = loadOverpassData();
+    // const response = await fetchOverpassData(polyString);
+    // const data = await response.json();
     
     const layer = L.layerGroup();
     const markers = processOverpassData(data);    
     
-    polygon.addTo(layer);
+    aoi.addTo(layer);
     markers.addTo(layer); 
 
     return layer;

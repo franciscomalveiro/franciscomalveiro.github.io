@@ -1,6 +1,3 @@
-import { areaOfInterest } from './aoi.js';
-
-
 function overpassQuery(polyString) {
     
     return `
@@ -85,11 +82,7 @@ function sortOverpassData(data) {
 }
 
 
-export async function loadOverpassData() {
-    const useMockPolygon = false;
-    
-    const polygon = await areaOfInterest(useMockPolygon);
-    
+export async function loadOverpassData(polygon) {    
     const polyString = getOverpassPolyString(polygon);    
 
     const response = await fetchOverpassData(polyString);
