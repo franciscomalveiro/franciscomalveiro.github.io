@@ -52,12 +52,15 @@ function _processRow(row) {
     
     const amenity = row?.tags?.amenity ?? null;
     const name = row?.tags?.name ?? null;
-    const address = {
+    
+    var address = {
       housenum: row?.tags?.["addr:housenumber"] ?? null,
       street: row?.tags?.["addr:street"] ?? null,
       city: row?.tags?.["addr:city"] ?? null,
       postcode: row?.tags?.["addr:postcode"] ?? null
-    };   
+    };
+    
+    address = Object.values(address).every(val => val === null) ? null : address;
     
     const timestampStr = row?.timestamp ?? null;
     const timestamp = new Date(timestampStr);
@@ -78,7 +81,16 @@ function filterOverpassData(data) {
 
 
 function sortOverpassData(data) {
-    return data.sort((a, b) => a.timestamp - b.timestamp);
+  return data.sort((a, b) => {
+    const countEmptyA = Object.values(a).filter(v => v === undefined || v === null).length;
+    const countEmptyB = Object.values(b).filter(v => v === undefined || v === null).length;
+
+    if (countEmptyA !== countEmptyB) {
+      return countEmptyB - countEmptyA; // More empty fields first
+    }
+
+    return a.timestamp - b.timestamp; // Older timestamp first
+  });
 }
 
 
