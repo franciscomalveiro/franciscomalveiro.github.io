@@ -35,9 +35,9 @@ export function createTable(header, tableData) {
       } else if (key === 'address' && rowData.address) {
         const addr = rowData.address;
         const parts = [addr.housenum, addr.street, addr.city, addr.postcode].filter(Boolean);
-        value = parts.length > 0 ? parts.join(', ') : 'undefined';
+        value = parts.length > 0 ? parts.join(', ') : '';
       } else {
-        value = rowData[key] ?? 'undefined';
+        value = rowData[key];// ?? 'undefined';
       }
 
       cell.textContent = value;

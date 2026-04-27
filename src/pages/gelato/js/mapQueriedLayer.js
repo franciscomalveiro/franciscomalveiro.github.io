@@ -86,7 +86,7 @@ function getMarkerText(name, coords, address, schedule, timestamp) {
 }
 
 
-function createColouredMarker(lat, lng, timestamp, colourScale) {
+function createColouredMarker(index, lat, lng, timestamp, colourScale) {
   const colour = colourScale(new Date(timestamp).getTime());
 
     const icon = L.divIcon({
@@ -94,14 +94,14 @@ function createColouredMarker(lat, lng, timestamp, colourScale) {
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
-        html: `<div style="background: ${colour};"></div>`
+        html: `<div style="background: ${colour};"> ${index}</div>`
     });
 
   return L.marker([lat, lng], { icon });
 }
 
 
-function processPoi(poi, markers, colourScale) {
+function processPoi(index, poi, markers, colourScale) {
     // const { lat, lon, tags, timestamp } = poi;
     // const schedule = tags.opening_hours;
     
@@ -112,7 +112,7 @@ function processPoi(poi, markers, colourScale) {
     const popup = L.popup().setContent(text);
 
     if (lat && lng) {
-        const marker = createColouredMarker(lat, lng, timestamp, colourScale);
+        const marker = createColouredMarker(index, lat, lng, timestamp, colourScale);
         marker.bindPopup(popup);
             
         markers.addLayer(marker);
@@ -131,7 +131,7 @@ function processOverpassData(data) {
     const colourScale = getColourScale(minTimestamp.getTime(), maxTimestamp.getTime());
         
 
-    data.forEach(poi => processPoi(poi, markers, colourScale));
+    data.forEach((poi, index) => processPoi(index+1, poi, markers, colourScale));
     return markers;
 }
 

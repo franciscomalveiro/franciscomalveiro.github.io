@@ -33,3 +33,18 @@
   width: 100%;
   height: 100%;
 }
+
+.custom-marker-icon div {
+  width: 25px;
+  height: 41px;
+  clip-path: polygon(50% 0%, 100% 50%, 100% 98%, 50% 100%, 0% 98%, 0% 50%);
+  transform: rotate(45deg);
+  border: 2px solid white;
+  background: inherit; /* Ensures background colour shows */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Ensure text is visible */
+  font-size: 12px;
+  margin: 0;
+}   

@@ -88,14 +88,6 @@ html, body {
 
 /* Marker icon */
 
-.custom-marker-icon div {
-    width: 25px;
-    height: 41px;
-    clip-path: polygon(50% 0%, 100% 50%, 100% 98%, 50% 100%, 0% 98%, 0% 50%);
-    transform: rotate(45deg);
-    border: 2px solid white;
-    margin: 0 auto;
-}
 
 /* Map container */
 
