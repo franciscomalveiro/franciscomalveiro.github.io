@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="../css/map.css">
+    <link rel="stylesheet" href="../css/table.css">
     <link rel="stylesheet" href="../css/style.css">
     <title>Title</title>
 
@@ -26,6 +27,13 @@
         <label><input type="radio" name="choice" value="current" checked> Current OSM Data </label>
         <label><input type="radio" name="choice" value="surveyed"> Surveyed Locations </label>
     </div>
+    <div>
+        <table>
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
     
     
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -33,7 +41,7 @@
     
     <script src="https://d3js.org/d3.v7.min.js"></script>   
 
-    <script type="module" src="../js/map.js"></script>
+    <script type="module" src="../js/main.js"></script>
     
 </body>
 

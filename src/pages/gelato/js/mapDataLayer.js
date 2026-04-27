@@ -1,38 +1,56 @@
-import * as L from 'leaflet';
-
-export async function createDataLayer() {
-  const layer = L.layerGroup();
-  const poiFile = "./data/csv/locations.csv";
-
-  Papa.parse(poiFile, {
-    download: true,
-    header: true,
-    complete: (results) => {
-      results.data.forEach(row => {
-        if (row.lat && row.lon) {
-          const lat = parseFloat(row.lat);
-          const lon = parseFloat(row.lon);
-          const address = row.address_corrected || row.address_original;
-          const figname = `${String(lat).replace('.', '')}_${String(lon).replace('.', '')}`;
-          const website = getWebsiteLink(19, lat, lon);
-          const markerText = `
-            <div><span class="marker-header">${lat},${lon}</span></div>
-            <div><span class="marker-text">${address}</span></div>
-            <div><span class="marker-date">Date</span></div>
-            <div class="marker-image-container">
-              <img src="fig/jpg/${figname}.jpg" alt="404" onerror="this.alt='404'; this.style.color='#333';">
-            </div>`;
-
-          L.marker([lat, lon]).bindPopup(markerText).addTo(layer);
-        }
-      });
-    }
-  });
-
-  return layer;
+function processRow(row) {
+    let lat = row.data.lat;
+    let lon = row.data.lon;
+    let address = row.data.address_corrected !== null ? row.data.address_corrected : row.data.address_original;
+    
+    return { lat, lon, address };
 }
 
-function getWebsiteLink(zoomLevel, lat, lon, withMarker = true) {
-  const markerStr = withMarker ? `?mlat=${lat}&mlon=${lon}` : ``;
-  return `https://www.openstreetmap.org/${markerStr}#map=${zoomLevel}/${lat}/${lon}`;
+
+
+
+async function processPoiFile(loadfile) {
+    const response = await fetch(loadfile);
+    if (!response.ok) {
+        throw new Error(`CSV file not found: ${loadfile}`);
+    }
+    
+    const data = [];
+
+    return new Promise((resolve, reject) => {
+    Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true,
+      step: (row) => {
+        const result = processRow(row);
+        data.push(result);
+      },
+      complete: () => resolve(data),
+      error: (error) => reject(error)
+    });
+    });
 }   
+
+
+async function processSurveyedData(poiFile) {
+    const markers = L.markerClusterGroup();
+    
+    
+    console.log(data);
+    
+    return markers;
+}
+
+
+
+export async function createDataLayer(data) {
+    const lat = 45.0705;
+    const lng = 7.6868;
+        
+    const layer = L.layerGroup();
+    const markers = processSurveyedData(data);
+    
+    //markers.addTo(layer); 
+
+    return layer;
+}

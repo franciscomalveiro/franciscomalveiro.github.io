@@ -1,7 +1,8 @@
 import { areaOfInterest } from './aoi.js';
+import { loadOverpassData } from './overpassData.js';
 
 
-function overpassQuery(polyString) {
+/*function overpassQuery(polyString) {
     
     return `
     [out:json];
@@ -35,7 +36,7 @@ function fetchOverpassData(polyString) {
         body: query
     })
     .catch(error => console.error('Error fetching POIs:', error));
-}
+}*/
 
 
 function processTimesteps(data) {
@@ -53,7 +54,7 @@ function getColourScale(vmin, vmax) {
 }
 
 
-function getMarkerText(coords, tags, timestamp) {
+function getMarkerText(coords, address, schedule, timestamp) {
     /*
     let date = new Date().toLocaleDateString('en', { 
       weekday: 'long', 
@@ -63,10 +64,7 @@ function getMarkerText(coords, tags, timestamp) {
     });   
     */
     
-    let address = tags?.address;
-    let schedule = tags?.opening_hours;
-
-    const latlonDisplay = `${coords.lat} ${coords.lon}`;
+    const latlonDisplay = `${coords.lat} ${coords.lng}`;
     
     const scheduleDisplay = schedule ? schedule.split(';').join('<br>') 
         : '<span style="color: red;">Missing schedule!</span>';
@@ -105,15 +103,17 @@ function createColouredMarker(lat, lon, timestamp, colourScale) {
 
 
 function processPoi(poi, markers, colourScale) {
-    const { lat, lon, tags, timestamp } = poi;
-    const schedule = tags.opening_hours;
+    //const { lat, lon, tags, timestamp } = poi;
+    // const schedule = tags.opening_hours;
     
-    const text = getMarkerText({ lat, lon }, tags, timestamp);
+    const { coords: { lat, lng }, amenity, timestamp, name, address, schedule } = poi;   
+    
+    const text = getMarkerText({ lat, lng }, address, schedule, timestamp);
     
     const popup = L.popup().setContent(text);
 
-    if (lat && lon) {
-        const marker = createColouredMarker(lat, lon, timestamp, colourScale);
+    if (lat && lng) {
+        const marker = createColouredMarker(lat, lng, timestamp, colourScale);
         marker.bindPopup(popup);
             
         markers.addLayer(marker);
@@ -123,7 +123,7 @@ function processPoi(poi, markers, colourScale) {
 
 function processOverpassData(data) {
     const markers = L.markerClusterGroup();
-    const timestamps = processTimesteps(data);
+    const timestamps = data.map(item => item.timestamp);   
     
     const minTimestamp = new Date(Math.min(...timestamps.map(t => t.getTime())));
     const maxTimestamp = new Date(Math.max(...timestamps.map(t => t.getTime())));
@@ -131,23 +131,28 @@ function processOverpassData(data) {
     const colourScale = getColourScale(minTimestamp.getTime(), maxTimestamp.getTime());
         
 
-    data.elements.forEach(poi => processPoi(poi, markers, colourScale));
+    data.forEach(poi => processPoi(poi, markers, colourScale));
     return markers;
 }
 
 
 
-export async function createQueriedLayer() {
+export async function createQueriedLayer(data) {
     const lat = 45.0705;
     const lng = 7.6868;
-    
+    /*
     const useMockPolygon = false;
     
     const polygon = await areaOfInterest(useMockPolygon);
     const polyString = getOverpassPolyString(polygon);    
 
     const response = await fetchOverpassData(polyString);
-    const data = await response.json();
+    
+    
+    
+    const data = await response.json();*/
+    
+    // const data = loadOverpassData();
     
     const layer = L.layerGroup();
     const markers = processOverpassData(data);    
