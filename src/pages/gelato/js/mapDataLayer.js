@@ -7,8 +7,6 @@ function processRow(row) {
 }
 
 
-
-
 async function processPoiFile(loadfile) {
     const response = await fetch(loadfile);
     if (!response.ok) {
@@ -29,14 +27,31 @@ async function processPoiFile(loadfile) {
       error: (error) => reject(error)
     });
     });
+}
+
+
+function createMarker(data, index, colour = '#007cba') {
+  const { lat, lng } = data;
+
+  const icon = L.divIcon({
+    className: 'custom-marker-icon',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    html: `<div style="background: ${colour};">${index}</div>`
+  });
+
+  return L.marker([parseFloat(lat), parseFloat(lng)], { icon });
 }   
 
 
-async function processSurveyedData(poiFile) {
+function processSurveyedData(data) {
     const markers = L.markerClusterGroup();
     
-    
-    console.log(data);
+    data.forEach((entry, index) => {
+      const marker = createMarker(entry, index + 1, '#ff5722');
+      markers.addLayer(marker);
+    });
     
     return markers;
 }
@@ -44,13 +59,10 @@ async function processSurveyedData(poiFile) {
 
 
 export async function createDataLayer(data) {
-    const lat = 45.0705;
-    const lng = 7.6868;
-        
     const layer = L.layerGroup();
     const markers = processSurveyedData(data);
-    
-    //markers.addTo(layer); 
+        
+    markers.addTo(layer); 
 
     return layer;
 }

@@ -1,11 +1,10 @@
 import { createQueriedLayer } from '../js/mapQueriedLayer.js';
 import { createDataLayer } from '../js/mapDataLayer.js';
 
-/*
 import { setupRadioHandler } from './radioHandler.js';
-*/
 
-export async function createMap(aoi, osmData) {
+
+export async function createMap(aoi, localData, osmData) {
     const lat = 45.0705;
     const lng = 7.6868;
     const zoomLevel = 13;
@@ -18,14 +17,13 @@ export async function createMap(aoi, osmData) {
         attribution: attribution
     }).addTo(map);
     
-    const queriedLayer = await createQueriedLayer(aoi, osmData);    
-    queriedLayer.addTo(map);
+//    const queriedLayer = await createQueriedLayer(aoi, osmData);    
+//    queriedLayer.addTo(map); 
     
+    const queriedData = null;
 
-/*    const dataLayer = await createDataLayer();
-    dataLayer.addTo(map);    */
-
-    /*
-    setupRadioHandler(map, queriedLayer, dataLayer);
-    */
+    const dataLayer = await createDataLayer(localData);
+    dataLayer.addTo(map);    
+    
+    return { map, queriedLayer, dataLayer };
 }

@@ -1,4 +1,4 @@
-date,address_original,address_corrected,lat,lon,filepath
+date,address_original,address_corrected,lat,lng,filepath
 ,"Corso Corsica, 24, 10134 Torino TO",,45.0464802,7.6458849,
 ,"Via Cesare Battisti, 7 F, 10123 Torino TO",,45.0519492,7.6465560,
 ,"Corso Guglielmo Marconi, 23/A, 10125 Torino TO",,45.1101027,7.6607983,
