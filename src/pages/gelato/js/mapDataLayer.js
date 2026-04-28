@@ -38,7 +38,7 @@ function createMarker(data, index, colour = '#007cba') {
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
-    html: `<div style="background: ${colour};">${index}</div>`
+    html: `<div style="background: ${colour};"></div>`
   });
 
   return L.marker([parseFloat(lat), parseFloat(lng)], { icon });

@@ -5,7 +5,7 @@ export function createTable(header, tableData) {
   tableHead.innerHTML = '';
   tableBody.innerHTML = '';
   
-  if (tableData.length === 0) return;
+  if (tableData === null || tableData.length === 0) return;
 
   // add 'index' to header
   const headerRow = tableHead.insertRow();
@@ -43,4 +43,5 @@ export function createTable(header, tableData) {
       cell.textContent = value;
     });
   });
+  return tableBody;
 }   

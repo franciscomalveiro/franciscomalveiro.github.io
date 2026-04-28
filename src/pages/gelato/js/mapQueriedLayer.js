@@ -150,10 +150,13 @@ export async function createQueriedLayer(aoi, data) {
     // const data = await response.json();
     
     const layer = L.layerGroup();
-    const markers = processOverpassData(data);    
+    
+    if (data !== null)  {
+        const markers = processOverpassData(data);
+        markers.addTo(layer); 
+    }
     
     aoi.addTo(layer);
-    markers.addTo(layer); 
 
     return layer;
 }

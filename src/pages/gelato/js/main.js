@@ -26,7 +26,7 @@ async function main() {
         {    coords: { lat: 28, lng: 29 }, amenity: 'cafe', timestamp: new Date('2026-04-27'), name: undefined, address: 'c', schedule: null }      
     ];
     
-    const queryOSM = false;
+    const queryOSM = true;
     const useLocal = true;
     
     const useMockPolygon = false;

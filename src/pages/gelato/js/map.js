@@ -17,13 +17,11 @@ export async function createMap(aoi, localData, osmData) {
         attribution: attribution
     }).addTo(map);
     
-//    const queriedLayer = await createQueriedLayer(aoi, osmData);    
+   const queriedLayer = await createQueriedLayer(aoi, osmData);    
 //    queriedLayer.addTo(map); 
-    
-    const queriedData = null;
 
     const dataLayer = await createDataLayer(localData);
-    dataLayer.addTo(map);    
+//    dataLayer.addTo(map);
     
     return { map, queriedLayer, dataLayer };
 }
