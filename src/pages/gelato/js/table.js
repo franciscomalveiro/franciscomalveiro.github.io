@@ -1,17 +1,18 @@
 export function createTable(header, tableData) {
-  const tableHead = document.querySelector('#tableHead');
-  const tableBody = document.querySelector('#tableBody');
+  const table = document.createElement('table');
 
-  tableHead.innerHTML = '';
-  tableBody.innerHTML = '';
-  
-  if (tableData === null || tableData.length === 0) return;
+  const thead = table.createTHead();
+  thead.id = 'tableHead';
+  const tbody = table.createTBody();
+  tbody.id = 'tableBody';
 
-  // add 'index' to header
-  const headerRow = tableHead.insertRow();
-  const th = document.createElement('th');
-  th.textContent = 'Index';
-  headerRow.appendChild(th);
+  if (tableData === null || tableData.length === 0) return table;
+
+  // Header row
+  const headerRow = thead.insertRow();
+  const thIndex = document.createElement('th');
+  thIndex.textContent = 'Index';
+  headerRow.appendChild(thIndex);
 
   Object.keys(header).forEach(key => {
     const th = document.createElement('th');
@@ -19,8 +20,9 @@ export function createTable(header, tableData) {
     headerRow.appendChild(th);
   });
 
+  // Data rows
   tableData.forEach((rowData, index) => {
-    const row = tableBody.insertRow();
+    const row = tbody.insertRow();
     const indexCell = row.insertCell();
     indexCell.textContent = index + 1;
 
@@ -37,11 +39,12 @@ export function createTable(header, tableData) {
         const parts = [addr.housenum, addr.street, addr.city, addr.postcode].filter(Boolean);
         value = parts.length > 0 ? parts.join(', ') : '';
       } else {
-        value = rowData[key];// ?? 'undefined';
+        value = rowData[key];
       }
 
       cell.textContent = value;
     });
   });
-  return tableBody;
-}   
+
+  return table;
+}

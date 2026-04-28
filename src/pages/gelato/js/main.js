@@ -39,9 +39,11 @@ async function main() {
     
       
     const { map, queriedLayer, dataLayer } = await createMap(polygon, localData, osmData);       
-    const table = createTable(header, osmData);
-    
-    setupRadioHandler(map, queriedLayer, dataLayer);
+
+    const tableElement = createTable(header, osmData);
+    document.querySelector('#table-container table').replaceWith(tableElement);
+
+    setupRadioHandler(map, queriedLayer, dataLayer, document.querySelector('#table-container'));
 }
 
 
